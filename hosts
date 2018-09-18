@@ -1,4 +1,8 @@
 [local]
 localhost
 
+[local:vars]
+ansible_python_interpreter=/usr/local/bin/python3
+
 [webservers]
+18.130.164.71
