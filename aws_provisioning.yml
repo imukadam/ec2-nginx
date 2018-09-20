@@ -11,7 +11,7 @@
     count: 1
     env: lab-01
   vars_files:
-    - aws_keys.yml
+    - aws_pass.yml
 
   tasks:
     - name: Create a security group

@@ -5,4 +5,8 @@ localhost
 ansible_python_interpreter=/usr/local/bin/python3
 
 [webservers]
-18.130.164.71
+35.178.249.62
+
+[webservers:vars]
+# ansible_user=ubuntu
+ansible_python_interpreter=/usr/bin/python3
