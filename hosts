@@ -5,4 +5,3 @@ localhost
 ansible_python_interpreter=/usr/local/bin/python3
 
 [webservers]
-52.56.94.180
