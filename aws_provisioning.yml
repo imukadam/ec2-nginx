@@ -1,7 +1,7 @@
 ---
 - hosts: local
   connection: local
-  gather_facts: true
+  gather_facts: false
   vars:
     instance_type: t2.micro
     security_group: im-webserver
@@ -84,3 +84,31 @@
         port: 22
         state: started
       with_items: "{{ webserver.instances }}"
+
+- hosts: webservers
+  gather_facts: false
+
+  tasks:
+    - name: perform an aptitude safe-upgrade
+      remote_user: ubuntu
+      become: true
+      apt:
+        upgrade: safe
+        update_cache: yes
+        autoclean: yes
+        autoremove: yes
+
+    - name: Install nginx
+      remote_user: ubuntu
+      become: true
+      apt:
+        name: nginx
+        state: latest
+
+    - name: start nginx
+      remote_user: ubuntu
+      become: true
+      service:
+        name: nginx
+        state: started
+
