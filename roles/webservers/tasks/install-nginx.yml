@@ -1,0 +1,27 @@
+# Tasks to install Nginx
+
+- name: perform an aptitude safe-upgrade
+  apt:
+    upgrade: safe
+    update_cache: yes
+    autoclean: yes
+    autoremove: yes
+
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: latest
+
+- name: Start Nginx
+  service:
+    name: nginx
+    state: started
+
+- name: Set fact with current date
+  set_fact: deployment_time="{{lookup('pipe','date \"+%Y-%m-%d %H:%M %Z\"')}}"
+
+- name: Set index.html page
+  template:
+    src: roles/webservers/templates/index.html.j2
+    dest: /var/www/html/index.html
+  notify: Restart Nginx

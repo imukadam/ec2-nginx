@@ -1,0 +1,71 @@
+# Tasks to create EC2 instances
+
+- name: Create ssh key
+  ec2_key:
+    name: "{{ keypair }}"
+    key_material: "{{ lookup('file', '/Users/imu04/.ssh/id_rsa.pub') }}"
+    region: "{{ region }}"
+
+- name: Create a security group
+  ec2_group:
+    name: "{{ security_group }}"
+    description: The webservers security group
+    region: "{{ region }}"
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    rules:
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 80
+        to_port: 80
+        cidr_ip: 0.0.0.0/0
+    rules_egress:
+      - proto: all
+        cidr_ip: 0.0.0.0/0
+
+- name: Launch an EC2 Ubuntu Instance
+  ec2:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    group: "{{ security_group }}"
+    instance_type: "{{ instance_type }}"
+    image: "{{ image }}"
+    wait: true
+    region: "{{ region }}"
+    keypair: "{{ keypair }}"
+    exact_count: "{{count}}"
+    count_tag:
+      Type: webserver
+  register: webserver
+
+- name: Add the newly created EC2 instance(s) to the inventory file
+  local_action: lineinfile
+                dest="./hosts"
+                regexp={{ item.public_ip }}
+                insertafter="[webservers]" line={{ item.public_ip }}
+  with_items: "{{ webserver.instances }}"
+
+- name: Add tag to Instance(s)
+  ec2_tag:
+    aws_access_key: "{{ aws_access_key }}"
+    aws_secret_key: "{{ aws_secret_key }}"
+    resource: "{{ item.id }}"
+    region: "{{ region }}"
+    state: "present"
+  with_items: "{{ webserver.instances }}"
+  args:
+    tags:
+      Type: webserver
+
+- name: Wait for SSH to come up
+  wait_for:
+    host: "{{ item.public_ip }}"
+    port: 22
+    state: started
+  with_items: "{{ webserver.instances }}"
+
+- name: "Refresh inventory"
+  meta: refresh_inventory
