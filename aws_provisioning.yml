@@ -17,9 +17,10 @@
   - init-ec2
 
 - hosts: webservers
-  gather_facts: false
+  gather_facts: true
   remote_user: ubuntu
   become: true
 
   roles:
   - webservers
+  - geerlingguy.ntp
