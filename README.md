@@ -1,4 +1,4 @@
-Create and launch and ec2 instance with Nginx
+Create and launch an EC2 Ubuntu instance with Nginx
 
 **Prerequisites:**
 - AWS account
