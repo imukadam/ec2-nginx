@@ -13,16 +13,13 @@
   vars_files:
     - aws_pass.yml
 
-  tasks:
-    - import_tasks: roles/common/tasks/init-ec2.yml
+  roles:
+  - init-ec2
 
 - hosts: webservers
   gather_facts: false
   remote_user: ubuntu
   become: true
 
-  tasks:
-    - import_tasks: roles/webservers/tasks/install-nginx.yml
-
-  handlers:
-    - include: roles/webservers/handlers/main.yml
+  roles:
+  - webservers

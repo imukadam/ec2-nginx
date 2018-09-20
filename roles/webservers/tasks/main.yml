@@ -25,3 +25,9 @@
     src: roles/webservers/templates/index.html.j2
     dest: /var/www/html/index.html
   notify: Restart Nginx
+
+- name: Set favicon
+  copy:
+    src: roles/webservers/files/web.ico
+    dest: /var/www/html/favicon.ico
+    mode: 0644
