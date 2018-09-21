@@ -3,7 +3,7 @@
 - name: Create ssh key
   ec2_key:
     name: "{{ keypair }}"
-    key_material: "{{ lookup('file', '/Users/imu04/.ssh/id_rsa.pub') }}"
+    key_material: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
     region: "{{ region }}"
 
 - name: Create a security group

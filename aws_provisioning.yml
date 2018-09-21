@@ -4,9 +4,9 @@
   gather_facts: false
   vars:
     instance_type: t2.micro
-    security_group: im-webserver
+    security_group: nginx-webserver
     image: ami-c7ab5fa0
-    keypair: imran-key
+    keypair: nginx-key
     region: eu-west-2
     count: 1
     env: lab-01
